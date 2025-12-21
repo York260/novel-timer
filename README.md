@@ -76,3 +76,4 @@ npm run generate-icons
 - Vite
 - Tailwind CSS
 - PWA (Progressive Web App)
+# novel-timer
