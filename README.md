@@ -77,3 +77,4 @@ npm run generate-icons
 - Tailwind CSS
 - PWA (Progressive Web App)
 # novel-timer
+# novel-timer
