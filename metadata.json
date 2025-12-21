@@ -1,0 +1,5 @@
+{
+  "name": "Novel Reward System",
+  "description": "A productivity system where reading web novels is earned through study and exercise. Tracks hours and kilometers to grant reward time.",
+  "requestFramePermissions": []
+}
