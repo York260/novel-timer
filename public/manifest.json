@@ -2,7 +2,7 @@
   "name": "Novel Reward System",
   "short_name": "小說獎勵",
   "description": "A productivity system where reading web novels is earned through study and exercise. Tracks hours and kilometers to grant reward time.",
-  "start_url": "/",
+  "start_url": "/novel-timer/",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#3b82f6",
