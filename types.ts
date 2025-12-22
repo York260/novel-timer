@@ -1,5 +1,5 @@
 
-export type ActivityType = 'study' | 'exercise' | 'running';
+export type ActivityType = 'study' | 'exercise' | 'running' | 'check-in';
 
 export interface ActivityEntry {
   id: string;

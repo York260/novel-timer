@@ -33,13 +33,22 @@ const Logs: React.FC<LogsProps> = ({ activities, redemptions, showType }) => {
                     <td className="px-6 py-4 text-gray-400 whitespace-nowrap">{formatDate(item.timestamp)}</td>
                     <td className="px-6 py-4">
                       <span className="font-semibold text-gray-700">
-                        {item.type === 'study' ? '📖 讀書' : item.type === 'exercise' ? '💪 運動' : '🏃 跑步'}
+                        {item.type === 'study' ? '📖 讀書' :
+                         item.type === 'exercise' ? '💪 運動' :
+                         item.type === 'running' ? '🏃 跑步' :
+                         '🎁 每日簽到'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="font-mono text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
-                        {item.value} {item.type === 'running' ? 'm' : 'min'}
-                      </span>
+                      {item.type === 'check-in' ? (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
+                          +{item.value} 分鐘
+                        </span>
+                      ) : (
+                        <span className="font-mono text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
+                          {item.value} {item.type === 'running' ? 'm' : 'min'}
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))}
