@@ -5,7 +5,7 @@ import Dashboard from './components/Dashboard';
 import ActivityForm from './components/ActivityForm';
 import Logs from './components/Logs';
 import RewardBrowser from './components/RewardBrowser';
-import AntlionPet from './components/AntlionPet';
+import CatPet from './components/CatPet';
 const STORAGE_KEY = 'novel_reward_system_data_v2';
 
 const App: React.FC = () => {
@@ -165,8 +165,8 @@ const App: React.FC = () => {
 
         {view === 'logging' ? (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* 蟻獅寵物區域 */}
-            <AntlionPet
+            {/* 貓咪寵物區域 */}
+            <CatPet
               totalMinutes={totalStudyMinutes + totalExerciseMinutes}
               totalKilometers={totalRunningMeters / 1000}
             />
