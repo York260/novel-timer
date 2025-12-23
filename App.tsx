@@ -5,11 +5,8 @@ import Dashboard from './components/Dashboard';
 import ActivityForm from './components/ActivityForm';
 import Logs from './components/Logs';
 import RewardBrowser from './components/RewardBrowser';
-import CheckInModal from './components/CheckInModal';
-import { getTaiwanDateString, shouldShowCheckIn } from './utils/dateUtils';
-
+import AntlionPet from './components/AntlionPet';
 const STORAGE_KEY = 'novel_reward_system_data_v2';
-const CHECK_IN_KEY = 'novel_reward_system_last_check_in';
 
 const App: React.FC = () => {
   const [activities, setActivities] = useState<ActivityEntry[]>([]);
@@ -17,7 +14,6 @@ const App: React.FC = () => {
   const [view, setView] = useState<'logging' | 'redemption' | 'browser'>('logging');
   const [activeRewardMinutes, setActiveRewardMinutes] = useState<number>(0);
   const [activeRedemptionId, setActiveRedemptionId] = useState<string | null>(null);
-  const [showCheckInModal, setShowCheckInModal] = useState<boolean>(false);
 
   // Load data
   useEffect(() => {
@@ -38,13 +34,6 @@ const App: React.FC = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ activities, redemptions }));
   }, [activities, redemptions]);
 
-  // Check-in logic
-  useEffect(() => {
-    const lastCheckIn = localStorage.getItem(CHECK_IN_KEY);
-    if (shouldShowCheckIn(lastCheckIn)) {
-      setShowCheckInModal(true);
-    }
-  }, []);
 
   // Calculate total earned based on cumulative milestones
   const totalStudyMinutes = activities
@@ -62,11 +51,8 @@ const App: React.FC = () => {
   const earnedFromStudy = Math.floor(totalStudyMinutes / 60) * 10;
   const earnedFromExercise = Math.floor(totalExerciseMinutes / 60) * 10;
   const earnedFromRunning = Math.floor(totalRunningMeters / 3000) * 10;
-  const earnedFromCheckIn = activities
-    .filter(a => a.type === 'check-in')
-    .reduce((acc, curr) => acc + curr.value, 0);
 
-  const totalEarned = earnedFromStudy + earnedFromExercise + earnedFromRunning + earnedFromCheckIn;
+  const totalEarned = earnedFromStudy + earnedFromExercise + earnedFromRunning;
   const totalSpent = redemptions.reduce((acc, curr) => acc + curr.amount, 0);
   const availableMinutes = totalEarned - totalSpent;
 
@@ -129,23 +115,6 @@ const App: React.FC = () => {
     setView('redemption');
   };
 
-  const handleClaimCheckIn = () => {
-    // 添加签到活动记录
-    const checkInActivity: ActivityEntry = {
-      id: crypto.randomUUID(),
-      type: 'check-in',
-      value: 10, // 10 分钟奖励
-      timestamp: new Date().toISOString(),
-    };
-
-    setActivities(prev => [checkInActivity, ...prev]);
-
-    // 更新签到日期
-    localStorage.setItem(CHECK_IN_KEY, getTaiwanDateString());
-
-    // 关闭弹窗
-    setShowCheckInModal(false);
-  };
 
   if (view === 'browser') {
     return (
@@ -196,6 +165,12 @@ const App: React.FC = () => {
 
         {view === 'logging' ? (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* 蟻獅寵物區域 */}
+            <AntlionPet
+              totalMinutes={totalStudyMinutes + totalExerciseMinutes}
+              totalKilometers={totalRunningMeters / 1000}
+            />
+
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
               <div className="lg:col-span-2 space-y-6">
                 <ActivityForm onAdd={handleAddActivity} />
@@ -265,8 +240,6 @@ const App: React.FC = () => {
           </div>
         )}
       </main>
-
-      {showCheckInModal && <CheckInModal onClaim={handleClaimCheckIn} />}
     </div>
   );
 };
