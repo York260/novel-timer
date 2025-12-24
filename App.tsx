@@ -4,16 +4,13 @@ import { ActivityEntry, RedemptionEntry, ActivityType } from './types';
 import Dashboard from './components/Dashboard';
 import ActivityForm from './components/ActivityForm';
 import Logs from './components/Logs';
-import RewardBrowser from './components/RewardBrowser';
 import CatPet from './components/CatPet';
 const STORAGE_KEY = 'novel_reward_system_data_v2';
 
 const App: React.FC = () => {
   const [activities, setActivities] = useState<ActivityEntry[]>([]);
   const [redemptions, setRedemptions] = useState<RedemptionEntry[]>([]);
-  const [view, setView] = useState<'logging' | 'redemption' | 'browser'>('logging');
-  const [activeRewardMinutes, setActiveRewardMinutes] = useState<number>(0);
-  const [activeRedemptionId, setActiveRedemptionId] = useState<string | null>(null);
+  const [view, setView] = useState<'logging' | 'redemption'>('logging');
 
   // Load data
   useEffect(() => {
@@ -75,56 +72,15 @@ const App: React.FC = () => {
   const handleRedeem = (amount: number) => {
     if (amount > availableMinutes) return;
 
-    const id = crypto.randomUUID();
     const newRedemption: RedemptionEntry = {
-      id,
+      id: crypto.randomUUID(),
       amount,
       timestamp: new Date().toISOString(),
     };
 
     setRedemptions(prev => [newRedemption, ...prev]);
-    setActiveRewardMinutes(amount);
-    setActiveRedemptionId(id);
-    setView('browser');
+    alert(`成功兌換 ${amount} 分鐘獎勵時間！`);
   };
-
-  const finalizeReward = (remainingSeconds: number) => {
-    if (!activeRedemptionId) return;
-
-    const unusedMinutes = Math.floor(remainingSeconds / 60);
-    
-    setRedemptions(prev => prev.map(r => {
-      if (r.id === activeRedemptionId) {
-        return { ...r, amount: Math.max(0, r.amount - unusedMinutes) };
-      }
-      return r;
-    }).filter(r => r.amount > 0)); // Remove entries where no time was actually spent
-
-    setActiveRedemptionId(null);
-    setActiveRewardMinutes(0);
-  };
-
-  const handleRewardEnded = () => {
-    finalizeReward(0);
-    setView('logging');
-    alert('獎勵時間已結束！請繼續努力獲得更多時間。');
-  };
-
-  const handleExitReward = (remainingSeconds: number) => {
-    finalizeReward(remainingSeconds);
-    setView('redemption');
-  };
-
-
-  if (view === 'browser') {
-    return (
-      <RewardBrowser 
-        initialMinutes={activeRewardMinutes} 
-        onFinish={handleRewardEnded} 
-        onExit={handleExitReward}
-      />
-    );
-  }
 
   return (
     <div className="min-h-screen bg-slate-50 pb-12">
