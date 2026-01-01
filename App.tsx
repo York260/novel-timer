@@ -82,6 +82,18 @@ const App: React.FC = () => {
     alert(`成功兌換 ${amount} 分鐘獎勵時間！`);
   };
 
+  const handleDeleteActivity = (id: string) => {
+    if (confirm('確定要刪除這筆活動記錄嗎？刪除後貓咪的等級和大小會自動調整。')) {
+      setActivities(prev => prev.filter(activity => activity.id !== id));
+    }
+  };
+
+  const handleDeleteRedemption = (id: string) => {
+    if (confirm('確定要刪除這筆兌換記錄嗎？')) {
+      setRedemptions(prev => prev.filter(redemption => redemption.id !== id));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 pb-12">
       <header className="bg-indigo-600 text-white shadow-md sticky top-0 z-10">
@@ -177,7 +189,12 @@ const App: React.FC = () => {
                 </div>
               </div>
               <div className="lg:col-span-3">
-                <Logs activities={activities} redemptions={[]} showType="activities" />
+                <Logs
+                  activities={activities}
+                  redemptions={[]}
+                  showType="activities"
+                  onDeleteActivity={handleDeleteActivity}
+                />
               </div>
             </div>
           </div>
@@ -191,7 +208,12 @@ const App: React.FC = () => {
                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
                   <h2 className="font-bold text-gray-800">歷史兌換記錄</h2>
                </div>
-               <Logs activities={[]} redemptions={redemptions} showType="redemptions" />
+               <Logs
+                 activities={[]}
+                 redemptions={redemptions}
+                 showType="redemptions"
+                 onDeleteRedemption={handleDeleteRedemption}
+               />
             </div>
           </div>
         )}
